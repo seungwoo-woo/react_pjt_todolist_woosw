@@ -1,9 +1,27 @@
-import logo from './logo.svg';
+import { createGlobalStyle } from 'styled-components';
+import { Reset } from "styled-reset";
+
 import './App.css';
+import MainPage from "./components/pages/MainPage";
+
+
+const GlobalStyle = createGlobalStyle`
+
+  /* 글로벌(공통) 스타일 */
+  body {
+    background: #F4F0E5;
+  }
+`;
+
 
 function App() {
   return (
-    <div> To do list APP by Seungwoo.Woo</div>
+    <>
+      <Reset />
+      <GlobalStyle />      
+      <MainPage>
+      </MainPage>
+    </>
   );
 }
 
