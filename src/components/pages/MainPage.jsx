@@ -1,9 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import titleUserM from "../../images/title-box-user-m.png";
 import MainPageCard from "./MainPageCard";
 
 const userName = 'Woo SeungWoo';
-const todayTask = 5;
+// const todayTask = 5;
 
 
 const MainPageWrapper = styled.div`
@@ -43,21 +44,44 @@ const MainPageWrapper = styled.div`
 
 
 
-function MainPage() {
+function MainPage(props) {
+  
+  const {todos} = props;
+
+  const noOfTodayTask = (todos.filter((todo) => {
+    return todo.division === 'today';
+  })).length;
+
+  const noOfPlannedTask = (todos.filter((todo) => {
+    return todo.division === 'planned';
+  })).length;
+
+  const noOfPersonalTask = (todos.filter((todo) => {
+    return todo.division === 'personal';
+  })).length; 
+
+  const noOfWorkTask = (todos.filter((todo) => {
+    return todo.division === 'work';
+  })).length;
+
+
+
+  // const navigate = useNavigate();
+
   return ( 
     <MainPageWrapper>
       <div className="app-title-box">
         <div className="app-title-box-left">
           <p className="app-title-user">{userName}</p>
-          <p className="app-title-tasks">Today you have {todayTask} tasks...</p>
+          <p className="app-title-tasks">Today you have {noOfTodayTask} tasks...</p>
         </div>
         <img src={titleUserM} width='70' alt="Main Page Image" />   
       </div>
 
-      <MainPageCard CardImage={'today'} CardTitle={'Today'} noOfTask={6} /> 
-      <MainPageCard CardImage={'planned'} CardTitle={'Panned'} noOfTask={9} /> 
-      <MainPageCard CardImage={'personal'} CardTitle={'Personal'} noOfTask={3} /> 
-      <MainPageCard CardImage={'work'} CardTitle={'Work'} noOfTask={2} />       
+      <MainPageCard CardTitle={'Today'} noOfTask={noOfTodayTask} />
+      <MainPageCard CardTitle={'Planned'} noOfTask={noOfPlannedTask} /> 
+      <MainPageCard CardTitle={'Personal'} noOfTask={noOfPersonalTask} /> 
+      <MainPageCard CardTitle={'Work'} noOfTask={noOfWorkTask} />       
 
     </MainPageWrapper>
   );

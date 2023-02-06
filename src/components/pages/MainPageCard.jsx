@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Today from "../../images/today.png";
-import Planned from "../../images/planned.png";
-import Personal from "../../images/personal.png";
-import Work from "../../images/work.png";
+// import Today from "../../images/today.png";
+// import Planned from "../../images/planned.png";
+// import Personal from "../../images/personal.png";
+// import Work from "../../images/work.png";
 
 
 
@@ -16,6 +17,7 @@ const CardWrapper = styled.div`
   background: #F4F0E5;
   box-shadow: 10px 10px 20px #dbdbdb;
   color: #333333;
+  cursor: pointer;
 
 
   .card-box {
@@ -49,12 +51,14 @@ const CardWrapper = styled.div`
 
 function MainPageCard(props) {
 
-  const { CardImage, CardTitle, noOfTask } = props;
-  console.log(CardImage);
+  const navigate = useNavigate();
+
+  const { CardTitle, noOfTask } = props;
+
   return (  
-    <CardWrapper>
+    <CardWrapper onClick={() => {navigate(`/${CardTitle}`);}}>                
       <div className="card-box">
-      <img src={require(`../../images/${CardImage}.png`)} alt="" /> 
+      <img src={require(`../../images/${CardTitle}.png`)} alt="" /> 
         <div className="card-box-right">
           <p className="card-box-title">{CardTitle}</p>
           <p className="card-box-tasks">{noOfTask} Tasks</p>
