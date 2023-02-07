@@ -33,7 +33,7 @@ const Checkbox = styled.div`
     font-size: 1.7rem;
 
     /* 체크되었을 때 보여줄 스타일 */
-    color: ${props => props.checked && '#22b8cf'};
+    color: ${props => props.checked && '#F57953'};
   }
 `;
 
@@ -45,7 +45,7 @@ const Text = styled.div`
   /* 조건부 스타일링 시 여러 개의 css를 설정할 때는 아래 형식으로 사용  */
   ${props => props.checked &&
     css`
-      color: #adb5bd;
+      color: gray;
       text-decoration: line-through;
     `}
 `;

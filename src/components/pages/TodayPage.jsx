@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import todayImage from "../../images/Today.png";
 import styled from "styled-components";
 import TaskItem from './TaskItem';
+import Modal from './Modal';
 
 
 const PageWrapper = styled.div`
@@ -13,8 +14,9 @@ const PageWrapper = styled.div`
   border-radius: 35px;
   overflow: hidden;
   border: 10px solid #363534;
-  background: white;
   position: relative;
+
+  background-color: white;
 
   .toMainButton {
     width: 50px;
@@ -38,8 +40,8 @@ const PageWrapper = styled.div`
     margin: 0 auto;
     width: 85%;   
     display: flex;
-    justify-content: start;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-end;
     margin-top: 5rem;
     margin-bottom: 1rem;
     // border: 1px solid orange;
@@ -47,6 +49,7 @@ const PageWrapper = styled.div`
 
   .title-box-right {
     margin-left: 20px;
+    margin-bottom: 10px;
   }
 
   .title {
@@ -60,7 +63,14 @@ const PageWrapper = styled.div`
     color: #F57953;
   } 
 
+  .title-date {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: gray;
 
+  }
 
   .taskAddButton {
     width: 50px;
@@ -87,18 +97,18 @@ const PageWrapper = styled.div`
 
 function TodayPage(props) {
 
-  console.log(props);
+  const date = new Date();
+  const dateString = date.toLocaleString('ko-kr').slice(0, 10);
 
   const { todos, onRemove, onToggle, onInsert } = props;
-  console.log(todos);
-  console.log(onRemove);
-  console.log(onToggle);
 
   const noOfTodayTask = (todos.filter((todo) => {
     return todo.division === 'today';
   })).length;
 
   const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <PageWrapper>
@@ -108,16 +118,20 @@ function TodayPage(props) {
         <div className="title-box-right">
           <p className="title-tasks">{noOfTodayTask} tasks...</p>
           <p className="title">Today</p>          
-        </div>           
+        </div>
+          <p className="title-date">{`(${dateString})`}</p>       
       </div>
-      <div className='taskAddButton' onClick={(e) => {onInsert(e.target.value);}}> + </div>
+
+      {/* <div className='taskAddButton' onClick={(e) => {onInsert(e.target.value);}}> + </div> */}
+      <div className='taskAddButton' onClick={() =>{setOpenModal(true)}}> + </div>
 
       {todos.map((todo) => {
         if (todo.division === 'today') {
           return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle} onInsert={onInsert} />
         }        
       })}
-      
+
+      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} />} 
 
     </PageWrapper>
   );
