@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import workImage from "../../images/Work.png";
 import styled from "styled-components";
+import TaskItem from './TaskItem';
+import Modal from './Modal';
 
 
 const PageWrapper = styled.div`
@@ -59,8 +61,6 @@ const PageWrapper = styled.div`
     color: #F57953;
   } 
 
-
-
   .taskAddButton {
     width: 50px;
     height: 50px;
@@ -81,12 +81,26 @@ const PageWrapper = styled.div`
     bottom: 1.5rem;
   }
 
+  hr {
+    width: 460px;
+    height: 2px;
+    border: 0;
+    background: #FFD777;    
+  }
+
 `;
 
-
 function WorkPage(props) {
-  const todayTask = 4;
+
+  const { todos, onRemove, onToggle, onInsert } = props;
+
+  const noOfWorkTask = (todos.filter((todo) => {
+    return todo.division === 'Work';
+  })).length;
+
   const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <PageWrapper>
@@ -94,12 +108,29 @@ function WorkPage(props) {
       <div className="title-box">
         <img src={workImage} width='70' alt="Personal Page Image" />
         <div className="title-box-right">
-          <p className="title-tasks">{todayTask} tasks...</p>
+          <p className="title-tasks">{noOfWorkTask} tasks...</p>
           <p className="title">Work</p>          
         </div>           
       </div>
-      <div className='taskAddButton' onClick={() => {navigate(`/`);}}> + </div>
 
+      <hr></hr>
+
+      <div className='taskAddButton' onClick={() =>{
+        {(noOfWorkTask < 8) && setOpenModal(true)}}}> + </div>
+
+      {todos.map((todo) => {
+        if (todo.division === 'Work'  && todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+      {todos.map((todo) => {
+        if (todo.division === 'Work'  && !todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}      
+
+      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} noOfTask={noOfWorkTask} title='Work'/>} 
     </PageWrapper>
   );
 }

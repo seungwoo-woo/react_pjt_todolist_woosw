@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import plannedImage from "../../images/Planned.png";
 import styled from "styled-components";
-
+import Modal from './Modal';
+import TaskItem from './TaskItem';
 
 const PageWrapper = styled.div`
   width: 480px;
@@ -81,12 +82,27 @@ const PageWrapper = styled.div`
     bottom: 1.5rem;
   }
 
+  hr {
+    width: 460px;
+    height: 2px;
+    border: 0;
+    background: #FFD777;    
+  }
+
 `;
 
 
-function PlannedPage(props) {
-  const plannedTask = 4;
+function PlannedPage(props) {  
+
+  const { todos, onRemove, onToggle, onInsert } = props;
+
+  const noOfPlannedTask = (todos.filter((todo) => {
+    return todo.division === 'Planned';
+  })).length;
+
   const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <PageWrapper>
@@ -94,11 +110,29 @@ function PlannedPage(props) {
       <div className="title-box">
         <img src={plannedImage} width='70' alt="Planned Page Image" />
         <div className="title-box-right">
-          <p className="title-tasks">{plannedTask} tasks...</p>
+          <p className="title-tasks">{noOfPlannedTask} tasks...</p>
           <p className="title">Planned</p>          
         </div>           
       </div>
-      <div className='taskAddButton' onClick={() => {navigate(`/`);}}> + </div>
+
+      <hr></hr>
+
+      <div className='taskAddButton' onClick={() =>{
+        {(noOfPlannedTask < 8) && setOpenModal(true)}}}> + </div>
+
+      {todos.map((todo) => {
+        if (todo.division === 'Planned' && todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+      {todos.map((todo) => {
+        if (todo.division === 'Planned' && !todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} noOfTask={noOfPlannedTask} title='Planned'/>} 
 
     </PageWrapper>
   );

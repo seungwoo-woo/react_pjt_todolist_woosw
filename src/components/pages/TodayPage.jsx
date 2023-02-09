@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import userImage from "../../images/title-box-user-m.png";
 import todayImage from "../../images/Today.png";
 import styled from "styled-components";
 import TaskItem from './TaskItem';
@@ -34,6 +35,12 @@ const PageWrapper = styled.div`
     cursor: pointer;
   }
 
+  .userImageC {
+    position: absolute;
+    right: 45px;
+    top: 50px;
+  }
+
   .title-box {
     color: #333333;
     height: 5rem; 
@@ -43,8 +50,8 @@ const PageWrapper = styled.div`
     justify-content: flex-start;
     align-items: flex-end;
     margin-top: 5rem;
-    margin-bottom: 1rem;
-    // border: 1px solid orange;
+    margin-bottom: 0.5rem;
+    padding-bottom: 1.0rem;
   }
 
   .title-box-right {
@@ -66,9 +73,9 @@ const PageWrapper = styled.div`
   .title-date {
     margin-left: 20px;
     margin-bottom: 10px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: gray;
+    font-size: 1.1rem;
+    font-weight: 200;
+    color: #0ACF97;
 
   }
 
@@ -86,12 +93,17 @@ const PageWrapper = styled.div`
     font-size: 2.7rem;
     font-weight: bolder;
     cursor: pointer;
-
     position: absolute;
     right: 1.5rem;
     bottom: 1.5rem;
   }
 
+  hr {
+    width: 460px;
+    height: 2px;
+    border: 0;
+    background: #FFD777;    
+  }
 `;
 
 
@@ -99,11 +111,21 @@ function TodayPage(props) {
 
   const date = new Date();
   const dateString = date.toLocaleString('ko-kr').slice(0, 10);
+  const day = date.getDay(); 
+  let dayString = '';
+
+  if(day===0) dayString = '일';
+  if(day===1) dayString = '월';
+  if(day===2) dayString = '화';
+  if(day===3) dayString = '수';
+  if(day===4) dayString = '목';
+  if(day===5) dayString = '금';
+  if(day===6) dayString = '토';
 
   const { todos, onRemove, onToggle, onInsert } = props;
 
   const noOfTodayTask = (todos.filter((todo) => {
-    return todo.division === 'today';
+    return todo.division === 'Today';
   })).length;
 
   const navigate = useNavigate();
@@ -113,25 +135,37 @@ function TodayPage(props) {
   return (
     <PageWrapper>
       <div className='toMainButton' onClick={() => {navigate(`/`);}}> ↶ </div>
+      <div className='userImageC'>
+        <img src={userImage} width='105' alt="Today Page Image" />
+      </div>
+      
       <div className="title-box">
         <img src={todayImage} width='70' alt="Today Page Image" />
         <div className="title-box-right">
           <p className="title-tasks">{noOfTodayTask} tasks...</p>
           <p className="title">Today</p>          
         </div>
-          <p className="title-date">{`(${dateString})`}</p>       
+          <p className="title-date">{`- ${dateString} (${dayString})`}</p>       
       </div>
 
-      {/* <div className='taskAddButton' onClick={(e) => {onInsert(e.target.value);}}> + </div> */}
-      <div className='taskAddButton' onClick={() =>{setOpenModal(true)}}> + </div>
+      <hr></hr>
 
       {todos.map((todo) => {
-        if (todo.division === 'today') {
-          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle} onInsert={onInsert} />
+        if (todo.division === 'Today' && todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
         }        
       })}
 
-      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} />} 
+      {todos.map((todo) => {
+        if (todo.division === 'Today' && !todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+      <div className='taskAddButton' onClick={() =>{
+        {(noOfTodayTask < 8) && setOpenModal(true)}}}> + </div>
+
+      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} noOfTask={noOfTodayTask} title='Today'/>} 
 
     </PageWrapper>
   );

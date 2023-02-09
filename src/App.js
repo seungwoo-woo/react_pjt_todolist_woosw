@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createGlobalStyle } from 'styled-components';
 import { Reset } from "styled-reset";
@@ -12,7 +12,6 @@ import WorkPage from './components/pages/WorkPage';
 
 
 const GlobalStyle = createGlobalStyle`
-
   /* 글로벌(공통) 스타일 */
   body {
     background: #F4F0E5;
@@ -49,14 +48,25 @@ function App() {
     // }
   ]);
 
+  useEffect(() => {
+    const dbTodos = JSON.parse(localStorage.getItem('todos')) || [];
+    setTodos(dbTodos);
+  }, []);
 
-  const handleInsert = useCallback((text) => {
+
+  // 로컬 스토리지에 저장하기
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
+
+
+  const handleInsert = useCallback((text, division) => {
     const newTodo = {
       // id: nextId.current,
       id: uuidv4(),
       text,
       checked: false, 
-      division: 'today'
+      division, 
     };
     
     setTodos(todos.concat(newTodo));   //  새로운 배열 반환함
@@ -92,9 +102,9 @@ function App() {
         <Routes>
           <Route path='/' element={<MainPage todos = {todos} />} />
           <Route path='/Today' element={<TodayPage todos = {todos} onRemove = {handleRemove} onToggle={handleToggle} onInsert = {handleInsert}/>} />
-          <Route path='/Planned' element={<PlannedPage />} />
-          <Route path='/Personal' element={<PersonalPage />} />
-          <Route path='/Work' element={<WorkPage />} />
+          <Route path='/Planned' element={<PlannedPage todos = {todos} onRemove = {handleRemove} onToggle={handleToggle} onInsert = {handleInsert}/>} />
+          <Route path='/Personal' element={<PersonalPage todos = {todos} onRemove = {handleRemove} onToggle={handleToggle} onInsert = {handleInsert}/>} />
+          <Route path='/Work' element={<WorkPage todos = {todos} onRemove = {handleRemove} onToggle={handleToggle} onInsert = {handleInsert}/>} />
 
         </Routes>
       </BrowserRouter>

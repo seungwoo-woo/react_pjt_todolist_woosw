@@ -8,14 +8,14 @@ const ModalWrapper = styled.div`
   height: 100%;
   border-radius: 15px;
   overflow: hidden;
-  background: rgba( 230, 230, 230, 0.5 );
+  background: rgba(230, 230, 230, 0.6);
   position: absolute; 
   top: 0;
   left: 0;
   
   .modalBox {
     width: 420px;
-    height: 320px;
+    height: 290px;
     border: 2px solid lightgray;
     border-radius: 10px;
     background: #F9EA85;
@@ -30,7 +30,7 @@ const ModalWrapper = styled.div`
     margin-left: 30px;
     margin-top: 30px;
     margin-right: 35px;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: bolder;
     display: flex;
     justify-content: space-around;
@@ -62,11 +62,10 @@ const ModalWrapper = styled.div`
     justify-content: space-around;    
   }
 
-  .cancleBtn {
+  .Btn {
     width: 100px;
     height: 35px;
     border-radius: 10px;
-    background-color: #F57953;
     margin-top: 2rem;
     text-align: center;
     line-height: 30px;
@@ -77,25 +76,17 @@ const ModalWrapper = styled.div`
     cursor: pointer;
   }
 
+  .cancleBtn {
+    background-color: #F57953;
+  }
+
   .addBtn {
-    width: 100px;
-    height: 35px;
-    border-radius: 10px;
     background-color: #0acf97;
-    margin-top: 2rem;
-    text-align: center;
-    line-height: 30px;
-    box-shadow: 5px 8px 10px #dbdbdb;
-    color: white;
-    font-size: 1.3rem;
-    font-weight: 200;
-    cursor: pointer;
   }
 
   .inputBody {
     display: flex;
-    margin: 25px 40px;
-        
+    margin: 25px 40px;        
   }
 `;
 
@@ -117,7 +108,7 @@ flex: 1;           // 버튼을 제외한 영역을 모두 차지하기
 }
 `;
 
-function Modal({closeModal, onInsert}) {
+function Modal({closeModal, onInsert, noOfTask, title}) {
 
   const [value, setValue] = useState('');
 
@@ -125,42 +116,38 @@ function Modal({closeModal, onInsert}) {
     setValue(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    onInsert(value);
+  const handleSubmit = () => {
+    onInsert(value, title);
     setValue(''); 
-    closeModal(false);  
-
-    e.preventDefault();
+    closeModal(false); 
   };
   
-
   return (
     <ModalWrapper>
-
       <form className='modalBox' onKeyDown={(e)=> {
-        if(e.key === 'Enter'){handleSubmit()}
+        if(e.key === 'Enter') {handleSubmit()}
       }}>
         <div className='clsBtn' onClick={() => closeModal(false)}>X</div>
         <div className="titleBox">
-          <p>Today's New Task...</p>
-          <img src={ newTask } width='70' alt="" />          
+          <p>{`${title}`}'s New Task...</p>
+          <img src={ newTask } width='60' alt="" />          
         </div>
 
         <div className='inputBody'>
           <StyledInput 
             type='text' 
-            placeholder="오늘 할 일을 일력하세요."
+            placeholder=" 할 일을 일력하세요."
             value = {value}
             onChange={handleChange}
           />
         </div>
 
         <div className='footer'>
-          <div className='cancleBtn' onClick={() => closeModal(false)}>cancle</div>
-          <div className='addBtn' onClick = {() => {
-            if(value !== ''){
+          <div className='Btn cancleBtn' onClick={() => closeModal(false)}>cancle</div>
+          <div className='Btn addBtn' onClick = {() => {
+            if(value !== '' && noOfTask < 8){
               handleSubmit();
-            }  
+            }
           }} >add</div>
         </div>
 

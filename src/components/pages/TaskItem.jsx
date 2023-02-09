@@ -18,9 +18,9 @@ const ListItemWrapper = styled.div`
   } */
 
   /* 엘리먼트 사이사이에 테두리 넣기 */
-  /* & + & {
+  & + & {
     border-top: 1px solid #dee2e6;
-  } */
+  }
 `;
 
 const Checkbox = styled.div`
@@ -64,7 +64,7 @@ const Remove = styled.div`
 
 function TaskItem(props) {
 
-  const { todo, onRemove, onToggle, onInsert } = props;
+  const { todo, onRemove, onToggle} = props;
   const {id, text, checked } = todo;
 
   return (

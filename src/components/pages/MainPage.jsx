@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import titleUserM from "../../images/title-box-user-m.png";
 import MainPageCard from "./MainPageCard";
 
 const userName = 'Woo SeungWoo';
-// const todayTask = 5;
-
 
 const MainPageWrapper = styled.div`
   width: 480px;
@@ -36,12 +33,11 @@ const MainPageWrapper = styled.div`
   } 
 
   .app-title-tasks {
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 1.3rem;
+    font-weight: 700;
     color: #F57953;
   } 
 `;
-
 
 
 function MainPage(props) {
@@ -49,44 +45,40 @@ function MainPage(props) {
   const {todos} = props;
 
   const noOfTodayTask = (todos.filter((todo) => {
-    return todo.division === 'today';
+    return todo.division === 'Today';
   })).length;
 
   const noOfPlannedTask = (todos.filter((todo) => {
-    return todo.division === 'planned';
+    return todo.division === 'Planned';
   })).length;
 
   const noOfPersonalTask = (todos.filter((todo) => {
-    return todo.division === 'personal';
+    return todo.division === 'Personal';
   })).length; 
 
   const noOfWorkTask = (todos.filter((todo) => {
-    return todo.division === 'work';
+    return todo.division === 'Work';
   })).length;
 
-
-
-  // const navigate = useNavigate();
 
   return ( 
     <MainPageWrapper>
       <div className="app-title-box">
         <div className="app-title-box-left">
           <p className="app-title-user">{userName}</p>
-          <p className="app-title-tasks">Today you have {noOfTodayTask} tasks...</p>
+          <p className="app-title-tasks">Today, you have {noOfTodayTask} tasks...</p>
         </div>
         <img src={titleUserM} width='70' alt="Main Page Image" />   
       </div>
 
-      <MainPageCard CardTitle={'Today'} noOfTask={noOfTodayTask} />
-      <MainPageCard CardTitle={'Planned'} noOfTask={noOfPlannedTask} /> 
+      <MainPageCard CardTitle={'Today'}    noOfTask={noOfTodayTask} />
+      <MainPageCard CardTitle={'Planned'}  noOfTask={noOfPlannedTask} /> 
       <MainPageCard CardTitle={'Personal'} noOfTask={noOfPersonalTask} /> 
-      <MainPageCard CardTitle={'Work'} noOfTask={noOfWorkTask} />       
+      <MainPageCard CardTitle={'Work'}     noOfTask={noOfWorkTask} />       
 
     </MainPageWrapper>
   );
 }
-
 export default MainPage;
 
 

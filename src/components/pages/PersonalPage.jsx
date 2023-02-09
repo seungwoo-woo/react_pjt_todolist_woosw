@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import personalImage from "../../images/Personal.png";
 import styled from "styled-components";
+import Modal from './Modal';
+import TaskItem from './TaskItem';
 
 
 const PageWrapper = styled.div`
@@ -81,12 +83,27 @@ const PageWrapper = styled.div`
     bottom: 1.5rem;
   }
 
+  hr {
+    width: 460px;
+    height: 2px;
+    border: 0;
+    background: #FFD777;    
+  }
+
 `;
 
 
 function PersonalPage(props) {
-  const todayTask = 4;
+
+  const { todos, onRemove, onToggle, onInsert } = props;
+
+  const noOfPersonalTask = (todos.filter((todo) => {
+    return todo.division === 'Personal';
+  })).length;
+
   const navigate = useNavigate();
+
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <PageWrapper>
@@ -94,13 +111,33 @@ function PersonalPage(props) {
       <div className="title-box">
         <img src={personalImage} width='70' alt="Personal Page Image" />
         <div className="title-box-right">
-          <p className="title-tasks">{todayTask} tasks...</p>
+          <p className="title-tasks">{noOfPersonalTask} tasks...</p>
           <p className="title">Personal</p>          
         </div>           
       </div>
-      <div className='taskAddButton' onClick={() => {navigate(`/`);}}> + </div>
+
+      <hr></hr>
+
+      <div className='taskAddButton' onClick={() =>{
+        {(noOfPersonalTask < 8) && setOpenModal(true)}}}> + </div>
+
+      {todos.map((todo) => {
+        if (todo.division === 'Personal' && todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+      {todos.map((todo) => {
+        if (todo.division === 'Personal' && !todo.checked) {
+          return <TaskItem key={todo.id} todo={todo} onRemove={onRemove} onToggle={onToggle}/>
+        }        
+      })}
+
+
+      {openModal && <Modal closeModal={setOpenModal} onInsert={onInsert} noOfTask={noOfPersonalTask} title='Personal'/>} 
 
     </PageWrapper>
+
   );
 }
 
